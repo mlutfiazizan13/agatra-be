@@ -1,0 +1,22 @@
+building:
+  only:
+    - dev
+  stage: build
+  tags:
+    - dev
+  script:
+    - echo "Begin Build"
+    - echo "GIT INFO"
+    - git log -1
+    - echo "Server Info"
+    - curl ifconfig.me
+    - whoami
+    - pwd
+    - php init --env=Development --overwrite=y
+    - composer install
+    - echo "Deployed"
+    - sudo rsync -av --delete --exclude-from '/home/gitlab-runner/exclude.txt' ./ /var/www/agatra-be
+    - cd /var/www/agatra-be
+    - sudo chmod 777 -R /var/www/agatra-be/backend/web/uploads
+    - sudo chmod 777 -R /var/www/agatra-be/api/runtime
+    # - ./yii migrate --interactive=0
